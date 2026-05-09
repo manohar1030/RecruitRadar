@@ -1,0 +1,21 @@
+services:
+
+  # Streamlit Dashboard
+  dashboard:
+    build: .
+    container_name: linkedin_dashboard
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+    restart: always
+
+  # Daily Scheduler
+  scheduler:
+    build: .
+    container_name: linkedin_scheduler
+    env_file:
+      - .env
+    command: python scheduler.py
+    restart: always
