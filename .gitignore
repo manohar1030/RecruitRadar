@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 data.json
+.venv/
+venv/
+.idea/
+.vscode/

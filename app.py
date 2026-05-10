@@ -2,7 +2,6 @@ import streamlit as st
 import html
 from storage import load_data, update_status, get_grouped_data
 
-# Page config
 st.set_page_config(
     page_title="RecruitRadar",
     page_icon="✨",
@@ -448,7 +447,7 @@ def main():
 """, unsafe_allow_html=True)
         return
 
-    # Filter and display posts
+    any_results = False
     for date, posts in grouped.items():
         filtered = posts
         if search:
@@ -469,8 +468,17 @@ def main():
 </div>
 """, unsafe_allow_html=True)
 
+        any_results = True
         for post in filtered:
             render_card(post)
+
+    if search and not any_results:
+        st.markdown("""
+<div class="empty-state">
+<div class="empty-title">No results found</div>
+<div class="empty-sub">Try a different recruiter name or company.</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
