@@ -1,50 +1,75 @@
-# 💼 LinkedIn Hiring Tracker
+# 🎯 RecruitRadar
 
-An AI-powered automation that finds real hiring posts on LinkedIn daily and displays them in a clean dashboard.
+An AI-powered automation pipeline that scours LinkedIn for real hiring posts, intelligently filters out engagement bait using LLMs (Groq), and presents high-quality leads in a stunning, dark-mode glassmorphism dashboard.
 
-## Features
-- 🤖 AI filters REAL vs FAKE hiring posts
-- 📊 Clean Streamlit dashboard
-- ✅ Mark sent/unsent for each recruiter
-- 🔍 Search by name or company
-- 📅 Grouped by date
-- 💾 Persistent local storage
+## ✨ Features
+- **🤖 AI-Powered Filtering:** Uses Groq to separate REAL job posts from FAKE engagement bait.
+- **🌌 Premium Dashboard:** A sleek, interactive Streamlit UI featuring glassmorphism and modern typography.
+- **✅ Lead Management:** Track outreach status (Pending/Sent) for each recruiter.
+- **🔍 Smart Search:** Instantly find leads by recruiter name or company.
+- **💾 MongoDB Storage:** Robust local data persistence for all your leads.
+- **🐳 Fully Dockerized:** Spin up the UI, background scheduler, and database with a single command.
 
-## Setup
+---
 
-### 1. Clone and install
+## 🚀 Quick Start (Docker - Recommended)
+
+The easiest way to run RecruitRadar is using Docker Compose, which automatically sets up the UI, the daily scheduler, and a local MongoDB instance.
+
+### 1. Configure Environment Variables
+Create a `.env` file in the root directory:
+```env
+APIFY_TOKEN=your_apify_token
+APIFY_TASK_ID=your_task_id
+GROQ_API_KEY=your_groq_api_key
+# MONGODB_URI is automatically handled by Docker, but you can override it here if using Atlas
+```
+
+### 2. Start the Stack
+Run the following command to build and start all services:
+```bash
+docker-compose up -d --build
+```
+
+### 3. Access the Dashboard
+Open your browser and navigate to:
+**http://localhost:8501**
+
+---
+
+## 💻 Manual Setup (Without Docker)
+
+If you prefer to run the components manually:
+
+### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Add your API keys
-Create a `.env` file:
-```
-APIFY_TOKEN=your_apify_token
-APIFY_TASK_ID=your_task_id
-GROQ_API_KEY=your_groq_api_key
+### 2. Setup MongoDB
+Ensure you have MongoDB running locally on port `27017` or add your connection string to the `.env` file:
+```env
+MONGODB_URI=mongodb://localhost:27017/linkedin_tracker
 ```
 
-### 3. Run the scheduler (fetches posts daily at 9 AM)
+### 3. Run the Scheduler
+The scheduler runs in the background and fetches new posts daily at 9:00 AM.
 ```bash
 python scheduler.py
 ```
 
-### 4. Run the dashboard
+### 4. Run the Dashboard
+In a separate terminal, launch the UI:
 ```bash
 streamlit run app.py
 ```
 
-## Deploy on Render
-1. Push to GitHub
-2. Create new Web Service on Render
-3. Set environment variables
-4. Build command: `pip install -r requirements.txt`
-5. Start command: `streamlit run app.py --server.port $PORT`
+---
 
-## Tech Stack
-- Python
-- Streamlit
-- Apify (LinkedIn scraping)
-- Groq AI (post filtering)
-- JSON (local storage)
+## 🛠️ Tech Stack
+- **Frontend:** Streamlit, Custom CSS (Glassmorphism)
+- **Backend Pipeline:** Python, Schedule
+- **Scraping:** Apify
+- **AI Intelligence:** Groq (Llama Models)
+- **Database:** MongoDB
+- **Infrastructure:** Docker & Docker Compose

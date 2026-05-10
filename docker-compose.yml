@@ -1,5 +1,15 @@
 services:
 
+  # MongoDB Database
+  mongodb:
+    image: mongo:latest
+    container_name: linkedin_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: always
+
   # Streamlit Dashboard
   dashboard:
     build: .
@@ -8,6 +18,10 @@ services:
       - "8501:8501"
     env_file:
       - .env
+    environment:
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/linkedin_tracker}
+    depends_on:
+      - mongodb
     command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
     restart: always
 
@@ -17,5 +31,12 @@ services:
     container_name: linkedin_scheduler
     env_file:
       - .env
+    environment:
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/linkedin_tracker}
+    depends_on:
+      - mongodb
     command: python scheduler.py
     restart: always
+
+volumes:
+  mongodb_data:

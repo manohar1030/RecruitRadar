@@ -28,14 +28,25 @@ def analyze_post(post):
     if not cleaned_text:
         return None
 
-    system_prompt = """You analyze LinkedIn posts for hiring. Reply in JSON only. No markdown. No extra text.
-Format exactly like this:
-{"verdict": "REAL" or "FAKE", "posterName": "name of person or company who posted", "jobCompany": "company name mentioned in job description", "profileUrl": "linkedin profile url of poster", "contactInfo": "any email address or phone number or careers page url found in post, empty string if none"}
+    system_prompt = """You are an AI that extracts hiring information from LinkedIn posts.
+Reply ONLY with a valid JSON object. No markdown formatting like ```json.
+Format EXACTLY like this:
+{
+  "verdict": "REAL",
+  "jobCompany": "Extracted company name (or empty string)",
+  "contactInfo": "Extracted email, phone, application link, or 'DM the author'"
+}
 
-REAL post has: proper job description, role, skills, experience, company name, official contact.
-FAKE post has: DM me, comment YES, urgent requirement, gmail IDs, no job description, like and share."""
+Criteria for REAL: Mention of hiring, job roles, skills, or asking for resumes.
+Criteria for FAKE: "Comment YES", engagement bait, "like and share", unrelated content.
 
-    user_prompt = f"Analyze this LinkedIn post: {cleaned_text}"
+IMPORTANT for contactInfo: 
+- Search thoroughly for ANY email address (e.g., @gmail.com, @company.com), phone number, or URL (e.g., bit.ly/..., forms.gle/..., company.com/careers).
+- If the post explicitly says "DM me" or "Direct message", output "DM the author".
+- Do not miss emails or links.
+"""
+
+    user_prompt = f"Analyze this LinkedIn post:\n{cleaned_text}"
 
     headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
@@ -95,10 +106,12 @@ def filter_real_posts(posts, limit=2):
             continue
 
         if result.get("verdict") == "REAL":
+            # Use raw post properties directly for profile and name,
+            # rely on AI only for parsing company and contact.
             real_posts.append({
-                "posterName": result.get("posterName", post.get("authorName", "Unknown")),
+                "posterName": post.get("authorName", "Unknown"),
                 "jobCompany": result.get("jobCompany", ""),
-                "profileUrl": result.get("profileUrl", post.get("authorProfileUrl", "")),
+                "profileUrl": post.get("authorProfileUrl", ""),
                 "postUrl": post.get("url", ""),
                 "contactInfo": result.get("contactInfo", ""),
                 "verdict": "REAL"
