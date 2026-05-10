@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Hiring Tracker - UI Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2.5rem 3rem;
+        }
+
+        /* ── Header ── */
+        .page-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .page-header p {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        /* ── Stats ── */
+        .stat-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #94a3b8;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .stat-value.green { color: #16a34a; }
+        .stat-value.amber { color: #d97706; }
+
+        /* ── Search ── */
+        .search-wrap {
+            margin-bottom: 2rem;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            padding: 0.65rem 1rem;
+            font-size: 0.875rem;
+            background: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .search-wrap input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+        }
+
+        /* ── Date Section ── */
+        .date-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .date-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .date-line {
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        /* ── Post Card ── */
+        .post-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem 0.75rem 1.5rem;
+            margin-bottom: 0.875rem;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            border-color: #cbd5e1;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-info {
+            flex: 1;
+        }
+
+        .card-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.2rem;
+        }
+
+        .card-company {
+            font-size: 0.8125rem;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .card-contact {
+            font-size: 0.8125rem;
+            color: #64748b;
+            margin-top: 0.35rem;
+        }
+
+        .card-contact a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .card-contact a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Badge ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .badge-sent {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .badge-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* ── Buttons ── */
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            padding: 0.55rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .btn-link {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #374151;
+            flex: 1;
+        }
+
+        .btn-link:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #94a3b8;
+        }
+
+        .empty-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-sub {
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>LinkedIn Hiring Tracker</h1>
+            <p>AI-powered recruiter finder — only verified, real hiring posts</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stat-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Recruiters</div>
+                <div class="stat-value">24</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Requests Sent</div>
+                <div class="stat-value green">16</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value amber">8</div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrap">
+            <input type="text" placeholder="Search by recruiter name or company...">
+        </div>
+
+        <!-- Date Section 1 -->
+        <div class="date-section">
+            <span class="date-label">10 May 2026</span>
+            <div class="date-line"></div>
+        </div>
+
+        <!-- Post Card 1 -->
+        <div class="post-card">
+            <div class="card-top">
+                <div class="card-info">
+                    <div class="card-name">Sarah Johnson</div>
+                    <div class="card-company">TechCorp Recruitment</div>
+                    <div class="card-contact">Contact · <a href="mailto:sarah@techcorp.com">sarah@techcorp.com</a></div>
+                </div>
+                <div>
+                    <span class="badge badge-sent">
+                        <span class="badge-dot"></span>Sent
+                    </span>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-link">View Profile</button>
+                <button class="btn-link">View Post</button>
+                <button class="btn-secondary" style="flex: 1.2;">Undo</button>
+            </div>
+        </div>
+
+        <!-- Post Card 2 -->
+        <div class="post-card">
+            <div class="card-top">
+                <div class="card-info">
+                    <div class="card-name">Michael Chen</div>
+                    <div class="card-company">Global Tech Solutions</div>
+                    <div class="card-contact">Contact · <a href="https://linkedin.com/in/michael-chen" target="_blank">linkedin.com/in/michael-chen</a></div>
+                </div>
+                <div>
+                    <span class="badge badge-pending">
+                        <span class="badge-dot"></span>Pending
+                    </span>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-link">View Profile</button>
+                <button class="btn-link">View Post</button>
+                <button class="btn-primary" style="flex: 1.2;">Mark as Sent</button>
+            </div>
+        </div>
+
+        <!-- Post Card 3 -->
+        <div class="post-card">
+            <div class="card-top">
+                <div class="card-info">
+                    <div class="card-name">Emma Williams</div>
+                    <div class="card-company">NextGen Careers</div>
+                    <div class="card-contact" style="opacity: 0.5;">No contact info available</div>
+                </div>
+                <div>
+                    <span class="badge badge-pending">
+                        <span class="badge-dot"></span>Pending
+                    </span>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-link">View Profile</button>
+                <button class="btn-link">View Post</button>
+                <button class="btn-primary" style="flex: 1.2;">Mark as Sent</button>
+            </div>
+        </div>
+
+        <!-- Date Section 2 -->
+        <div class="date-section">
+            <span class="date-label">09 May 2026</span>
+            <div class="date-line"></div>
+        </div>
+
+        <!-- Post Card 4 -->
+        <div class="post-card">
+            <div class="card-top">
+                <div class="card-info">
+                    <div class="card-name">David Patel</div>
+                    <div class="card-company">StartupStaff Inc</div>
+                    <div class="card-contact">Contact · <a href="mailto:david@startupstaff.com">david@startupstaff.com</a></div>
+                </div>
+                <div>
+                    <span class="badge badge-sent">
+                        <span class="badge-dot"></span>Sent
+                    </span>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-link">View Profile</button>
+                <button class="btn-link">View Post</button>
+                <button class="btn-secondary" style="flex: 1.2;">Undo</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
