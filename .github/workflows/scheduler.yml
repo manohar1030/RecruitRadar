@@ -1,0 +1,30 @@
+name: Daily LinkedIn Scheduler
+
+on:
+  schedule:
+    - cron: '30 3 * * *'  # 9:00 AM IST daily
+  workflow_dispatch:  # Manual trigger too
+
+jobs:
+  run-scheduler:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scheduler
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          APIFY_TASK_ID: ${{ secrets.APIFY_TASK_ID }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python scheduler.py
