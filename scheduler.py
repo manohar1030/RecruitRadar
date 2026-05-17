@@ -7,15 +7,15 @@ from storage import add_posts
 
 def run_daily_job():
     print(f"\n{'='*50}")
-    print(f"🚀 Daily LinkedIn Automation Started")
-    print(f"⏰ Time: {datetime.now().strftime('%d/%m/%Y %H:%M')} IST")
+    print(f" Daily LinkedIn Automation Started")
+    print(f" Time: {datetime.now().strftime('%d/%m/%Y %H:%M')} IST")
     print(f"{'='*50}\n")
 
     try:
         # Step 1: Scrape
         raw_posts = run_apify_scraper()
         if not raw_posts:
-            print("❌ No posts scraped. Exiting.")
+            print(" No posts scraped. Exiting.")
             return
 
         # Step 2: Extract
@@ -24,18 +24,18 @@ def run_daily_job():
         # Step 3: AI Filter
         real_posts = filter_real_posts(posts, limit=4)
         if not real_posts:
-            print("❌ No real hiring posts found.")
+            print(" No real hiring posts found.")
             return
 
         # Step 4: Save to MongoDB
         add_posts(real_posts)
 
         print(f"\n{'='*50}")
-        print(f"✅ Done! {len(real_posts)} recruiters saved.")
+        print(f" Done! {len(real_posts)} recruiters saved.")
         print(f"{'='*50}\n")
 
     except Exception as e:
-        print(f"❌ ERROR: Daily job failed: {e}", file=sys.stderr)
+        print(f" ERROR: Daily job failed: {e}", file=sys.stderr)
         sys.exit(1)
 
 
